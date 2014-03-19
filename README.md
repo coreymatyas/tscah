@@ -16,18 +16,10 @@ list.
 3. Type `help` in the channel the bot is in for a command list.
 
 ## Contributing
-Feel free to fix any of the below listed bugs and send a pull request. I check Github daily 
-typically. I'll eventually move this to the formal issues system.
+Feel free to fix any of the bugs listed in the GitHub Issues tracker and send a pull request. 
+I check Github daily typically.
 
-- Fix CPU leak (probably some infinite loop or another) when left running for long periods
-- Clean up edge cases (and some non-edge cases) for players joining and quitting while in-game
-- Add support for multi-pick cards
-- Add more cards
-- Add [gambling](http://s3.amazonaws.com/cah/CAH_Rules.pdf) support
-- Clean up code (and document!)
-- Add support for choosing different ports
-
-### Notes on Naming
+## Notes on Naming
 I'm legally obligated to tell you that TSCAH merely stands for TSCAH: an arbitrary ordering 
 of letters with no affiliation with any trademark holders. 
 Therefore, in all official documentation, it shall be referred to as TSCAH. 
