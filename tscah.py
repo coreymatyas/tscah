@@ -5,6 +5,7 @@ import sys, telnetlib, re, time, copy
 
 adminUIDs = []
 bot_nickname = "TSCAH"
+
 keep_alive_time = 30
 round_length = 60
 white_filename = "whitecards.txt"
@@ -158,7 +159,7 @@ def run_game():
 	if len(events) != 0:
 		event = events.pop(0)
 		if event.type == "textmessage":
-			if event.params['msg'] == "diebot" and event.params['invokeruid'] in adminUIDs:
+			if event.params['msg'] == "diebot" and (event.params['invokeruid'] in adminUIDs or not adminUIDs):
 				t_send_channel_message("Goodbye!")
 				loop_running = False
 			if event.params['msg'] == "join" and not event.params['invokeruid'] in current_players.keys() and not game_running:
@@ -220,7 +221,7 @@ def run_game():
 					t_send_channel_message("Winner: " + winner.name + " // " + fill_blank(current_black, offered_cards[winner.uid]))
 					t_send_channel_message("---------------------------------------------")
 					winner.awesome()
-					events.append(Event("textmessage", dict(msg="startgame", invokeruid=adminUIDs[0])))
+					events.append(Event("textmessage", dict(msg="startgame", invokeruid=(adminUIDs[0] if adminUIDs else ''))))
 				else:
 					t_send_channel_message(event.params['invokername'] + ", please choose a card number 0-%d." % (len(r_cards) - 1))
 		elif event.type == "clientmoved":
@@ -240,7 +241,7 @@ def run_game():
 		t_send_channel_message("Black Card: " + current_black)
 		if len(r_cards) == 0:
 			t_send_channel_message("Nobody submitted a card in time! You all lose!")
-			events.append(Event("textmessage", dict(msg="startgame", invokeruid=adminUIDs[0])))
+			events.append(Event("textmessage", dict(msg="startgame", invokeruid=(adminUIDs[0] if adminUIDs else ''))))
 		else:
 			t_send_channel_message("White Cards: ")
 			for i in range(len(r_cards)):
@@ -249,19 +250,20 @@ def run_game():
 		game_running = False
 
 if __name__ == "__main__":
-	if len(sys.argv) != 5:
-		print "Usage: %s <host> <username> <password> <cid>" % sys.argv[0]
+	if len(sys.argv) < 5:
+		print("Usage: %s <host> <username> <password> <cid> [port]" % sys.argv[0])
 		sys.exit(1)
 
 	host = sys.argv[1]
 	username = sys.argv[2]
 	password = sys.argv[3]
 	cid = sys.argv[4]
+	port = int(sys.argv[5]) if len(sys.argv) > 5 else 10011
 
 	seed(time.time())
 	deck = Deck()
 
-	tel = telnetlib.Telnet(host, 10011)
+	tel = telnetlib.Telnet(host, port)
 
 	tel.write("login %s %s\n" % (username, password))
 	tel.write("use 1\n")
