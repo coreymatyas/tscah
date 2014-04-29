@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from random import shuffle, seed
-import sys, telnetlib, re, time, copy
+import sys, telnetlib, re, time, copy, argparse
 
 adminUIDs = []
 bot_nickname = "TSCAH"
@@ -250,15 +250,27 @@ def run_game():
 		game_running = False
 
 if __name__ == "__main__":
-	if len(sys.argv) < 5:
-		print("Usage: %s <host> <username> <password> <cid> [port]" % sys.argv[0])
-		sys.exit(1)
+	## TODO: verify functionality, remove intermediary vars, add help messages, add CLI output during play, add verbose option
+	parser = argparse.ArgumentParser(description='Cards Against Humanity clone playable in TeamSpeak.')
 
-	host = sys.argv[1]
-	username = sys.argv[2]
-	password = sys.argv[3]
-	cid = sys.argv[4]
-	port = int(sys.argv[5]) if len(sys.argv) > 5 else 10011
+	parser.add_argument(["-h", "--host"], dest="host", default="localhost")
+	parser.add_argument(["-p", "--port"], dest="port", type=int)
+
+	parser.add_argument("username")
+	parser.add_argument("password")
+	parser.add_argument("channelid")
+
+	args = parser.parse_args()
+
+	# if len(sys.argv) < 5:
+	# 	print("Usage: %s <host> <username> <password> <cid> [port]" % sys.argv[0])
+	# 	sys.exit(1)
+
+	host = args.host #sys.argv[1]
+	username = args.username #sys.argv[2]
+	password = args.password #sys.argv[3]
+	cid = args.channelid #sys.argv[4]
+	port = args.port #int(sys.argv[5]) if len(sys.argv) > 5 else 10011
 
 	seed(time.time())
 	deck = Deck()
